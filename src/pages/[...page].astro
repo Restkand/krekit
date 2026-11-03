@@ -1,6 +1,6 @@
 ---
 /**
- * Halaman umum situs: Tentang, Lisensi, Kemitraan, Progres, dan Kontribusi (/kontribusi/...).
+ * Halaman umum situs: Tentang, Lisensi, Kemitraan, Progres, Dari Instagram, dan Kontribusi (/kontribusi/...).
  * Isi dari src/content/docs/<halaman>.mdx. Pelajaran dan istilah di Kamus punya halaman sendiri.
  */
 import { getCollection, render } from 'astro:content'
@@ -8,8 +8,8 @@ import LearnLayout from '../layouts/LearnLayout.astro'
 import { withBase } from '../lib/inline.js'
 
 export async function getStaticPaths() {
-  // Entri yang dirender halaman ini, diurutkan untuk kolom navigasi: Tentang, Lisensi, Kemitraan, Progres, lalu Kontribusi
-  const ORDER = ['tentang', 'lisensi', 'kemitraan', 'progres']
+  // Entri yang dirender halaman ini, diurutkan untuk kolom navigasi: Tentang, Lisensi, Kemitraan, Progres, Dari Instagram, lalu Kontribusi
+  const ORDER = ['tentang', 'lisensi', 'kemitraan', 'progres', 'instagram']
   const isSitePage = (id: string) => ORDER.includes(id) || id === 'kontribusi' || id.startsWith('kontribusi/')
   const rank = (id: string) => (ORDER.includes(id) ? ORDER.indexOf(id) : ORDER.length)
   const pages = (await getCollection('docs', (e) => isSitePage(e.id))).sort(

@@ -1,0 +1,80 @@
+---
+/**
+ * Kotak "Dibahas di Instagram" di akhir pelajaran dan istilah Kamus: episode Instagram yang menautkan
+ * halaman ini (lihat src/data/instagram.json). Teks saja, tanpa gambar atau video, supaya halaman tetap ringan.
+ *   <InstagramRelated path={`/${entry.id}/`} />
+ */
+import { INSTAGRAM, episodesFor, seriesLabel } from '../lib/instagram.js'
+import { withBase } from '../lib/inline.js'
+
+interface Props {
+  /** Alamat halaman tanpa base path, mis. '/kamus/dasar/delta-time/' */
+  path: string
+}
+const episodes = episodesFor(Astro.props.path)
+---
+
+{
+  episodes.length > 0 && (
+    <section class="igrel" aria-labelledby="igrel-title">
+      <h2 class="igrel__title" id="igrel-title">Dibahas di Instagram</h2>
+      <ul class="igrel__list">
+        {episodes.map((e) => (
+          <li>
+            <a href={e.url ?? INSTAGRAM.profile} rel="noopener" target="_blank">
+              <span class="igrel__series">{seriesLabel(e)}</span>
+              {e.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="igrel__more">
+        Semua episode dan bahannya ada di <a href={withBase('/instagram/')}>Dari Instagram</a>.
+      </p>
+    </section>
+  )
+}
+
+<style>
+  .igrel {
+    margin-top: 40px;
+    padding: 16px 18px;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 10px;
+    background: var(--sl-color-gray-6);
+    font-size: 15px;
+  }
+
+  .igrel__title {
+    margin: 0 0 8px;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .igrel__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .igrel__list li {
+    margin: 6px 0;
+  }
+
+  .igrel__series {
+    margin-right: 8px;
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: var(--accent);
+    color: #07070b;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .igrel__more {
+    margin: 10px 0 0;
+    color: var(--sl-color-gray-3);
+  }
+</style>
