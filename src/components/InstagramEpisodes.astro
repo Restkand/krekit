@@ -1,0 +1,134 @@
+---
+/**
+ * Daftar episode Instagram Krekit beserta bahan lanjutannya di situs. Data di src/data/instagram.json
+ * (lihat src/lib/instagram.js). Tambahkan "url" pada episode untuk tautan ke postingannya.
+ *   import InstagramEpisodes from '~/components/InstagramEpisodes.astro'
+ *   <InstagramEpisodes />
+ */
+import { INSTAGRAM as data, publishedEpisodes, seriesLabel, formatDate } from '../lib/instagram.js'
+import { withBase } from '../lib/inline.js'
+
+const episodes = publishedEpisodes()
+const resolve = (href: string) => (href.startsWith('/') ? withBase(href) : href)
+---
+
+<p class="ig-follow">
+  <a class="ig-follow__btn" href={data.profile} rel="me noopener" target="_blank">Buka {data.handle} di Instagram</a>
+</p>
+
+<ul class="ig-list">
+  {
+    episodes.map((e) => (
+      <li class="ig-card">
+        <p class="ig-card__meta">
+          <span class={`ig-card__series ig-card__series--${e.series}`}>{seriesLabel(e)}</span>
+          <time datetime={e.date}>{formatDate(e.date)}</time>
+        </p>
+        <h2 class="ig-card__title">{e.title}</h2>
+        <p class="ig-card__summary">{e.summary}</p>
+        <ul class="ig-card__links">
+          {e.links.map((link) => (
+            <li>
+              <a href={resolve(link.href)}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+        {e.url && (
+          <a class="ig-card__post" href={e.url} rel="noopener" target="_blank">
+            Lihat postingannya
+          </a>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .ig-follow {
+    margin: 0 0 28px;
+  }
+
+  .ig-follow__btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #07070b;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .ig-list {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ig-card {
+    margin: 0;
+    padding: 18px 20px;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 12px;
+    background: var(--sl-color-gray-6);
+  }
+
+  .ig-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin: 0;
+    font-size: 14px;
+    color: var(--sl-color-gray-3);
+  }
+
+  .ig-card__series {
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .ig-card__series--bedah,
+  .ig-card__series--kamus {
+    background: var(--accent);
+    color: #07070b;
+  }
+
+  .ig-card__series--tips,
+  .ig-card__series--insight {
+    background: #7ff0ff;
+    color: #07070b;
+  }
+
+  /* Judul kartu memakai h2 agar urutan heading tetap benar, tapi ukurannya lebih kecil dari judul bagian */
+  :global(.lcontent) .ig-card__title {
+    margin: 10px 0 6px;
+    padding: 0;
+    border: 0;
+    font-size: 20px;
+  }
+
+  .ig-card__summary {
+    margin: 0 0 10px;
+  }
+
+  .ig-card__links {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .ig-card__links li {
+    margin: 4px 0;
+  }
+
+  .ig-card__post {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: 700;
+  }
+</style>

@@ -1,0 +1,109 @@
+{
+  "profile": "https://www.instagram.com/krekit.id/",
+  "handle": "@krekit.id",
+  "series": {
+    "bedah": { "label": "Bedah", "desc": "Cara kerjanya: satu pertanyaan, dibedah dengan Krekit." },
+    "tips": { "label": "Tips", "desc": "Cara membuatnya, langkah demi langkah." },
+    "insight": { "label": "Insight", "desc": "Topik yang lebih panjang, sesekali." },
+    "kamus": { "label": "Kamus", "desc": "Satu istilah dalam beberapa slide." },
+    "reels": { "label": "Reels", "desc": "" }
+  },
+  "episodes": [
+    {
+      "date": "2026-11-02",
+      "series": "reels",
+      "title": "Karakter ini cuma segitiga",
+      "summary": "Krekit kelihatan bulat, padahal tersusun dari ribuan segitiga.",
+      "links": [
+        { "label": "Lab: Semua bentuk 3D tersusun dari segitiga", "href": "/lab/#segitiga" },
+        { "label": "Pelajaran: Mesh, Material, dan Cahaya", "href": "/belajar/fondasi-engine/03-permukaan/#mesh-titik-dan-segitiga" },
+        { "label": "Kamus: Mesh", "href": "/kamus/geometri/mesh/" }
+      ]
+    },
+    {
+      "date": "2026-11-02",
+      "series": "bedah",
+      "num": 1,
+      "title": "Kenapa karakter lari lebih cepat di HP baru?",
+      "summary": "Tanpa delta time, game di layar 120 FPS bergerak empat kali lebih cepat daripada di 30 FPS.",
+      "links": [
+        { "label": "Lab: Kecepatan yang adil di semua layar", "href": "/lab/#delta" },
+        { "label": "Pelajaran: Bagaimana Sebuah Frame Lahir", "href": "/belajar/fondasi-engine/01-frame/#delta-time-kecepatan-yang-adil-di-semua-layar" },
+        { "label": "Kamus: Delta time", "href": "/kamus/dasar/delta-time/" }
+      ]
+    },
+    {
+      "date": "2026-11-03",
+      "series": "tips",
+      "num": 1,
+      "title": "Bikin game adil di semua HP dalam 3 langkah",
+      "summary": "Kalikan dengan delta, batasi delta saat game tersendat, dan jalankan physics dengan langkah waktu tetap.",
+      "links": [
+        { "label": "Pelajaran: Langkah waktu tetap untuk physics", "href": "/belajar/fondasi-engine/01-frame/#langkah-waktu-tetap-untuk-physics" },
+        { "label": "Kamus: Delta time", "href": "/kamus/dasar/delta-time/" },
+        { "label": "Kamus: Fixed timestep", "href": "/kamus/fisika/fixed-timestep/" }
+      ]
+    },
+    {
+      "date": "2026-11-04",
+      "series": "insight",
+      "title": "Dari titik sampai browser",
+      "summary": "Krekit dibongkar: segitiga, titik, piksel, warna, sampai digambar ulang 60 kali per detik di browser.",
+      "links": [
+        { "label": "Pelajaran: Bagaimana Sebuah Frame Lahir (Web & Three.js)", "href": "/belajar/web-threejs/01-frame/" },
+        { "label": "Kamus: Pipeline rasterisasi", "href": "/kamus/shader/pipeline-raster/" },
+        { "label": "Kamus: WebGL", "href": "/kamus/web/webgl/" },
+        { "label": "Kamus: requestAnimationFrame", "href": "/kamus/web/raf/" }
+      ]
+    },
+    {
+      "date": "2026-11-04",
+      "series": "bedah",
+      "num": 2,
+      "title": "Tebak easing: A, B, atau C?",
+      "summary": "Tiga lompatan yang sama, bedanya hanya di cara kecepatannya berubah.",
+      "links": [
+        { "label": "Lab: Gerakan yang terasa punya berat", "href": "/lab/#easing" },
+        { "label": "Pelajaran: Animasi", "href": "/belajar/fondasi-engine/07-animasi/#tween-dan-easing-rasa-sebuah-gerakan" },
+        { "label": "Kamus: Easing", "href": "/kamus/animasi/easing/" }
+      ]
+    },
+    {
+      "date": "2026-11-05",
+      "series": "kamus",
+      "num": 1,
+      "title": "Frame dan FPS",
+      "summary": "Game adalah gambar diam yang diganti sangat cepat, dan setiap gambar punya batas waktu.",
+      "links": [
+        { "label": "Kamus: Frame & FPS", "href": "/kamus/dasar/frame/" },
+        { "label": "Kamus: V-Sync & Batas Frame Rate", "href": "/kamus/dasar/vsync/" },
+        { "label": "Pelajaran: Anggaran 16,7 milidetik", "href": "/belajar/fondasi-engine/01-frame/#anggaran-167-milidetik" }
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "series": "tips",
+      "num": 2,
+      "title": "Bikin gerakan terasa hidup dalam 4 langkah",
+      "summary": "Easing, antisipasi, squash and stretch, dan debu saat mendarat.",
+      "links": [
+        { "label": "Lab: Gerakan yang terasa punya berat", "href": "/lab/#easing" },
+        { "label": "Pelajaran: Game Feel", "href": "/belajar/desain-game/02-game-feel/" },
+        { "label": "Kamus: Easing", "href": "/kamus/animasi/easing/" }
+      ]
+    },
+    {
+      "date": "2026-11-09",
+      "series": "bedah",
+      "num": 3,
+      "title": "Kartun atau realistis?",
+      "summary": "Model yang sama terlihat berbeda hanya karena cara permukaannya diberi cahaya.",
+      "links": [
+        { "label": "Lab: Cahaya menentukan warna permukaan", "href": "/lab/#shading" },
+        { "label": "Pelajaran: Material dan PBR", "href": "/belajar/fondasi-engine/03-permukaan/#material-dan-pbr" },
+        { "label": "Kamus: Toon shading", "href": "/kamus/shader/toon-shading/" },
+        { "label": "Kamus: PBR", "href": "/kamus/geometri/pbr/" }
+      ]
+    }
+  ]
+}

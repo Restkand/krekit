@@ -7,6 +7,7 @@
 import { getCollection, render } from 'astro:content'
 import LearnLayout from '../../../layouts/LearnLayout.astro'
 import ProgressToggle from '../../../components/ProgressToggle.astro'
+import InstagramRelated from '../../../components/InstagramRelated.astro'
 import { ALL_TRACKS } from '../../../lib/sections.js'
 import { withBase } from '../../../lib/inline.js'
 import { LESSON_XP } from '../../../lib/progress.js'
@@ -126,6 +127,8 @@ const dateFmt = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long'
   <article class="lcontent">
     <Content />
   </article>
+
+  <InstagramRelated path={`/${entry.id}/`} />
 
   {
     (sources.length > 0 || entry.data.lastReviewed) && (

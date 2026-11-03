@@ -372,3 +372,11 @@ if (webglAvailable()) {
   hint.hidden = true
   document.querySelector('[data-fallback]').hidden = false
 }
+
+// Tautan seperti /lab/#delta langsung membuka percobaan itu (dipakai halaman Dari Instagram)
+const openFromHash = () => {
+  const id = location.hash.slice(1)
+  if (id !== state.exp && tabs.some((tab) => tab.dataset.tab === id)) selectTab(id)
+}
+openFromHash()
+window.addEventListener('hashchange', openFromHash)
