@@ -1,7 +1,7 @@
 ---
 /**
- * Lab Krekit: "Bedah Krekit". Satu panggung 3D dengan Krekit dan lima percobaan yang bisa diubah.
- * Setiap percobaan memperlihatkan satu fundamental (segitiga, shading, delta time, easing, shader)
+ * Lab Krekit: "Bedah Krekit". Satu panggung 3D dengan Krekit dan enam percobaan yang bisa diubah.
+ * Setiap percobaan memperlihatkan satu fundamental (segitiga, shading, delta time, easing, shader, collider)
  * dan menautkan ke pelajaran yang membahasnya. Logika ada di src/site/lab.js.
  * Scene lama (dibedah di Bab Tambahan Web & Three.js) pindah ke /lab/graphics-pipeline/.
  */
@@ -13,7 +13,7 @@ import { withBase } from '../../lib/inline.js'
 import '@fontsource-variable/bricolage-grotesque/opsz.css'
 import '../../site/lab.css'
 
-const description = 'Bedah Krekit: lihat segitiganya, ganti shading, atur frame rate dan delta time, coba easing, dan ubah shader auranya.'
+const description = 'Bedah Krekit: lihat segitiganya, ganti shading, atur frame rate dan delta time, coba easing, ubah shader auranya, dan uji ukuran collider.'
 
 /** Lapisan percobaan Segitiga: Krekit dibangun dari wireframe sampai tampilan akhirnya (dipakai juga oleh lab.js) */
 const layers = [
@@ -90,6 +90,20 @@ const experiments = [
     links: [
       { href: '/belajar/fondasi-engine/04-shader/#data-yang-masuk-ke-shader-uniform-attribute-varying', label: 'Pelajaran: Shader' },
       { href: '/kamus/shader/uniform/', label: 'Kamus: Uniform' },
+    ],
+  },
+  {
+    id: 'collider',
+    label: 'Collider',
+    title: 'Kenapa "kena" padahal belum menyentuh?',
+    text: [
+      'Game tidak memeriksa tabrakan dengan ribuan segitiga Krekit. Yang diperiksa adalah collider: bentuk sederhana seperti kotak, bola, atau kapsul yang tidak terlihat oleh pemain.',
+      'Coba ketiga ukuran. Collider yang lebih besar dari badan membuat bola sudah kena sebelum menyentuh. Collider yang lebih kecil membuat bola lolos walau kelihatannya menyentuh.',
+      'Ukuran ini dipilih dengan sengaja. Collider karakter yang sedikit lebih ramping membuat pemain tidak tersangkut di celah sempit, dan hitbox musuh yang sedikit lebih besar membuat tembakan terasa adil.',
+    ],
+    links: [
+      { href: '/kamus/fisika/collider/', label: 'Kamus: Collider' },
+      { href: '/kamus/fisika/trigger/', label: 'Kamus: Trigger & Area' },
     ],
   },
 ]
@@ -248,6 +262,23 @@ const experiments = [
                       <button type="button" role="radio" aria-checked="false" data-value="#ff5ce1" style="--c:#ff5ce1" aria-label="Merah muda" />
                       <button type="button" role="radio" aria-checked="false" data-value="#7cff6b" style="--c:#7cff6b" aria-label="Hijau" />
                     </div>
+                  </>
+                )}
+
+                {exp.id === 'collider' && (
+                  <>
+                    <p class="labctl__label" id="label-collider">Ukuran collider</p>
+                    <div class="seg" role="radiogroup" aria-labelledby="label-collider" data-choice="collider">
+                      <button type="button" role="radio" aria-checked="true" data-value="pas">Pas badan</button>
+                      <button type="button" role="radio" aria-checked="false" data-value="besar">Kotak besar</button>
+                      <button type="button" role="radio" aria-checked="false" data-value="kecil">Kotak kecil</button>
+                    </div>
+                    <button class="toggle" type="button" aria-pressed="true" data-toggle="show-collider">
+                      Tampilkan collider
+                    </button>
+                    <button class="btn" type="button" data-action="throw">
+                      Lempar bola
+                    </button>
                   </>
                 )}
               </div>

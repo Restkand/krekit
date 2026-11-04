@@ -541,10 +541,10 @@ a {
     border-bottom: 1px solid var(--line);
   }
 
-  /* Kelima percobaan terlihat sekaligus sebagai deretan langkah, tanpa perlu digeser */
+  /* Keenam percobaan terlihat sekaligus sebagai deretan langkah (dua baris), tanpa perlu digeser */
   .labtabs {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     overflow: visible;
     scroll-margin-top: calc(min(44svh, 420px) + 12px);

@@ -1,0 +1,60 @@
+---
+title: "Squash & Stretch"
+description: "Prinsip animasi klasik: benda memipih saat menabrak dan memanjang saat melesat, dengan volume yang tetap. Memberi kesan berat dan lentur. Di game sering cukup dibuat dengan mengubah skala sesaat."
+kind: term
+level: 1
+aka: "squash and stretch, squish, skala elastis"
+status: draf
+lastReviewed: 2026-11-04
+sources:
+  - title: "Twelve basic principles of animation"
+    url: "https://en.wikipedia.org/wiki/Twelve_basic_principles_of_animation"
+    publisher: "Wikipedia"
+    accessed: 2026-11-04
+  - title: "Celeste: Source/Player/Player.cs"
+    url: "https://github.com/NoelFB/Celeste/blob/master/Source/Player/Player.cs"
+    publisher: "GitHub (Noel Berry)"
+    accessed: 2026-11-04
+sidebar:
+  order: 11
+---
+
+import Aside from '~/components/Aside.astro'
+
+Salah satu dari dua belas prinsip animasi yang diperkenalkan animator Disney Ollie Johnston dan Frank Thomas dalam buku *The Illusion of Life: Disney Animation* (1981). Benda **memipih** (squash) saat menabrak atau menahan beban, dan **memanjang** (stretch) saat melesat. Tujuannya memberi kesan **berat dan lentur**.
+
+Aturan yang paling penting: **volumenya tidak berubah**. Kalau benda memipih ke bawah, ia harus melebar ke samping. Kalau tidak, benda terlihat seperti menyusut.
+
+- **Memanjang** saat lepas landas atau jatuh cepat.
+- **Memipih** tepat di frame mendarat atau menabrak.
+- **Kembali ke bentuk semula** dengan cepat, sering dengan sedikit pantulan.
+
+## Di game
+
+Untuk karakter, efek ini sering cukup dibuat dengan **mengubah skala** sprite atau mesh sesaat, tanpa animasi buatan tangan. Supaya volumenya tetap:
+
+```text
+// 2D: luas tetap
+skala.y = s
+skala.x = 1 / s
+
+// 3D: volume tetap
+skala.y = s
+skala.x = skala.z = 1 / akar(s)
+```
+
+Nilai `s` lebih dari 1 berarti memanjang, kurang dari 1 berarti memipih. Celeste, misalnya, memberi skala 0,6 × 1,4 (lebih sempit, lebih tinggi) di frame karakter melompat, lalu mengembalikannya ke 1 secara bertahap dengan laju yang dikali delta time.
+
+<Aside type="caution" title="Secukupnya">
+Squash yang terlalu besar atau terlalu lama membuat karakter terlihat seperti agar-agar. Sesuaikan kekuatannya dengan besar kejadiannya: lompatan kecil cukup sedikit, jatuh dari tempat tinggi boleh lebih kuat.
+</Aside>
+
+## Pelajari lebih dalam
+
+Squash and stretch termasuk umpan balik kecil yang dibahas di [Game Feel](/belajar/desain-game/02-game-feel/), bersama hit stop, partikel, dan getaran. Coba bedanya di [Lab: Gerakan yang terasa punya berat](/lab/#easing) dengan menyalakan sakelar squash.
+
+## Terkait
+
+- [Antisipasi](/kamus/animasi/antisipasi/)
+- [Easing](/kamus/animasi/easing/)
+- [Tween](/kamus/animasi/tween/)

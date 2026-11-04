@@ -3,12 +3,13 @@ import gsap from 'gsap'
 import { createKrekit } from './krekit.js'
 
 /**
- * Lab Krekit (Bedah Krekit): panggung 3D + lima percobaan.
+ * Lab Krekit (Bedah Krekit): panggung 3D + enam percobaan.
  *   segitiga -> Krekit dibangun per lapisan: wireframe, permukaan tanpa cahaya, cahaya, detail
  *   shading  -> toon / standar (PBR) / tanpa cahaya, dan garis tepi
  *   delta    -> frame rate dibatasi, putaran dengan atau tanpa delta time
  *   easing   -> lompatan dengan easing pilihan, squash and stretch
  *   shader   -> uniform shader aura diubah lewat slider
+ *   collider -> bola dilempar ke Krekit; ukuran collider menentukan kapan bola "kena"
  *
  * Hierarki panggung (satu properti, satu pengendali):
  *   stage -> lompatan percobaan easing (posisi y dan skala)
@@ -28,6 +29,7 @@ const hint = document.querySelector('[data-hint]')
 const HINTS = {
   segitiga: 'Ketuk Krekit untuk lanjut ke lapisan berikutnya',
   easing: 'Ketuk Krekit untuk melompat dengan easing pilihanmu',
+  collider: 'Pilih ukuran collider, lalu lempar bolanya',
 }
 const DEFAULT_HINT = 'Ketuk Krekit untuk melompat'
 
@@ -38,6 +40,8 @@ const state = {
   useDelta: true,
   ease: 'halus',
   squash: true,
+  collider: 'pas', // percobaan collider: pas | besar | kecil
+  showCollider: true,
 }
 
 // ---------- Tab percobaan (pola tab WAI-ARIA: panah kiri/kanan berpindah tab) ----------
@@ -278,8 +282,118 @@ function initStage() {
     }
   }
 
+  /**
+   * Percobaan collider: bola dilempar ke Krekit. Tabrakan diperiksa terhadap collider pilihan, bukan terhadap
+   * segitiga Krekit. "Menyentuh" diukur dengan elips yang pas dengan badan, jadi selisihnya bisa dilaporkan.
+   * Ukuran badan diukur sekali setelah animasi muncul selesai (skala Krekit masih 0 saat halaman dibuka).
+   */
+  const BALL_R = 0.22
+  const BALL_SPEED = 2.6
+  const colliderGroup = new THREE.Group()
+  colliderGroup.visible = false
+  scene.add(colliderGroup)
+  // Collider dan bola digambar di atas Krekit (tanpa depth test), seperti tampilan debug collider di editor engine
+  const wire = (color) => new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.9, depthTest: false })
+  const ball = new THREE.Mesh(new THREE.SphereGeometry(BALL_R, 24, 16), new THREE.MeshStandardMaterial({ color: '#ff5ce1', roughness: 0.4, depthTest: false }))
+  ball.renderOrder = 10
+  ball.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(BALL_R * 1.02, 1)), wire('#7ff0ff')))
+  ball.visible = false
+  colliderGroup.add(ball)
+  const shapes = {}
+  const body = { center: new THREE.Vector3(), radius: new THREE.Vector3() }
+  const throwState = { active: false, vx: 0, hit: false, touched: false, result: '' }
+  const ready = new Promise((resolve) => gsap.delayedCall(reduceMotion ? 0 : 1.6, () => (measureBody(), resolve())))
+
+  function measureBody() {
+    scene.updateMatrixWorld(true)
+    const box = new THREE.Box3()
+    krekit.hitMeshes.forEach((mesh) => box.expandByObject(mesh))
+    box.getCenter(body.center)
+    box.getSize(body.radius).multiplyScalar(0.5)
+    const size = box.getSize(new THREE.Vector3())
+    // Pas badan: elips; kotak besar: badan + 0,35 ke samping dan atas-bawah; kotak kecil: bagian bawah badan yang lebih ramping
+    const ellipse = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1, 2)), wire('#7ff0ff'))
+    ellipse.scale.copy(body.radius)
+    ellipse.position.copy(body.center)
+    const big = box.clone().expandByVector(new THREE.Vector3(0.35, 0.35, 0))
+    const small = new THREE.Box3(
+      new THREE.Vector3(body.center.x - size.x * 0.28, box.min.y, body.center.z - size.z * 0.28),
+      new THREE.Vector3(body.center.x + size.x * 0.28, box.min.y + size.y * 0.55, body.center.z + size.z * 0.28),
+    )
+    const boxLines = (b) => {
+      const lines = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(...b.getSize(new THREE.Vector3()).toArray())), wire('#7ff0ff'))
+      b.getCenter(lines.position)
+      return lines
+    }
+    shapes.pas = { object: ellipse, hits: touches }
+    shapes.besar = { object: boxLines(big), hits: (p) => big.distanceToPoint(p) <= BALL_R }
+    shapes.kecil = { object: boxLines(small), hits: (p) => small.distanceToPoint(p) <= BALL_R }
+    Object.values(shapes).forEach((s) => {
+      s.object.renderOrder = 9
+      colliderGroup.add(s.object)
+    })
+    showCollider()
+  }
+  // Mendekati: bola menyentuh elips badan bila titik pusatnya masuk elips yang diperbesar sebesar jari-jari bola
+  function touches(p) {
+    const r = body.radius
+    const dx = (p.x - body.center.x) / (r.x + BALL_R)
+    const dy = (p.y - body.center.y) / (r.y + BALL_R)
+    const dz = (p.z - body.center.z) / (r.z + BALL_R)
+    return dx * dx + dy * dy + dz * dz <= 1
+  }
+  function showCollider() {
+    for (const [name, s] of Object.entries(shapes)) s.object.visible = state.showCollider && name === state.collider
+  }
+  function throwBall() {
+    if (!shapes.pas) return
+    // Bola lewat setinggi bagian atas badan: kotak kecil tidak sampai setinggi itu
+    ball.position.set(3.4, body.center.y + body.radius.y * 0.55, 0)
+    ball.visible = true
+    Object.assign(throwState, { active: true, vx: -BALL_SPEED, hit: false, touched: false, result: 'Bola dilempar…' })
+  }
+  function flash(object) {
+    object.material.color.set('#ff5ce1')
+    gsap.delayedCall(0.35, () => object.material.color.set('#7ff0ff'))
+  }
+  function updateBall(delta) {
+    if (!throwState.active) return
+    ball.position.x += throwState.vx * delta
+    if (throwState.hit) {
+      if (ball.position.x > 3.6) throwState.active = ball.visible = false
+      return
+    }
+    const touchedNow = touches(ball.position)
+    if (shapes[state.collider].hits(ball.position)) {
+      throwState.hit = true
+      throwState.vx = BALL_SPEED * 0.8
+      throwState.result = touchedNow ? 'Kena tepat saat menyentuh' : 'Kena sebelum menyentuh'
+      flash(shapes[state.collider].object)
+      krekit.dizzy()
+      return
+    }
+    throwState.touched ||= touchedNow
+    if (ball.position.x < -3.4) {
+      throwState.active = ball.visible = false
+      throwState.result = throwState.touched ? 'Lolos, padahal menyentuh' : 'Lolos'
+    }
+  }
+  onChoice('collider', (value) => {
+    state.collider = value
+    showCollider()
+    throwBall()
+  })
+  onToggle('show-collider', (value) => {
+    state.showCollider = value
+    showCollider()
+  })
+  document.querySelector('[data-action="throw"]')?.addEventListener('click', throwBall)
+
   /** Dipanggil saat pindah tab: kembalikan efek percobaan sebelumnya agar tidak saling bertumpuk */
   function enter(id, previous) {
+    colliderGroup.visible = id === 'collider'
+    if (id === 'collider') ready.then(() => state.exp === 'collider' && throwBall())
+    if (previous === 'collider') throwState.active = ball.visible = false
     if (previous === 'segitiga' && id !== 'segitiga') applyLayer(4)
     if (id === 'segitiga' && previous !== 'segitiga') applyLayer(state.layer)
     if (previous === 'shading' && id !== 'shading') {
@@ -330,6 +444,8 @@ function initStage() {
       windowSpin += step
     }
 
+    if (state.exp === 'collider') updateBall(delta)
+
     krekit.update(delta, elapsed, 0)
     renderer.render(scene, camera)
 
@@ -350,6 +466,7 @@ function initStage() {
     if (state.exp === 'segitiga') text = `Badan Krekit: ${bodyTriangles.toLocaleString('id-ID')} segitiga`
     else if (state.exp === 'delta') text = `${fps} frame/detik · putaran ${degPerSecond}°/detik`
     else if (state.exp === 'shader') text = `uniform uTime = ${uniforms.uTime.value.toFixed(1)} detik`
+    else if (state.exp === 'collider') text = throwState.result
     if (text !== lastText) readout.textContent = lastText = text
   }
 
@@ -372,3 +489,11 @@ if (webglAvailable()) {
   hint.hidden = true
   document.querySelector('[data-fallback]').hidden = false
 }
+
+// Tautan seperti /lab/#delta langsung membuka percobaan itu (dipakai halaman Dari Instagram)
+const openFromHash = () => {
+  const id = location.hash.slice(1)
+  if (id !== state.exp && tabs.some((tab) => tab.dataset.tab === id)) selectTab(id)
+}
+openFromHash()
+window.addEventListener('hashchange', openFromHash)
