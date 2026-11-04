@@ -1,0 +1,46 @@
+---
+title: "Antisipasi"
+description: "Prinsip animasi klasik: gerakan persiapan sebelum aksi utama, seperti menekuk lutut sebelum melompat. Membuat aksi mudah terbaca dan terasa nyata. Di game, antisipasi juga menjadi tanda serangan musuh, tapi harus pendek untuk aksi pemain."
+kind: term
+level: 1
+aka: "anticipation, wind-up, ancang-ancang, telegraph"
+status: draf
+lastReviewed: 2026-11-04
+sources:
+  - title: "Twelve basic principles of animation"
+    url: "https://en.wikipedia.org/wiki/Twelve_basic_principles_of_animation"
+    publisher: "Wikipedia"
+    accessed: 2026-11-04
+sidebar:
+  order: 10
+---
+
+import Aside from '~/components/Aside.astro'
+
+Salah satu dari dua belas prinsip animasi yang diperkenalkan animator Disney Ollie Johnston dan Frank Thomas dalam buku *The Illusion of Life: Disney Animation* (1981). Antisipasi adalah **gerakan persiapan sebelum aksi utama**. Gunanya menyiapkan penonton untuk aksi yang akan terjadi, dan membuat aksi itu terlihat lebih nyata.
+
+Contohnya ada di sekitar kita: penari menekuk lutut sebelum melompat, pemain golf mengayun stik ke belakang sebelum memukul.
+
+- **Tanpa antisipasi:** karakter tiba-tiba sudah di udara. Gerakannya terasa kaku dan mudah terlewat.
+- **Dengan antisipasi:** karakter jongkok sebentar, lalu melompat. Mata penonton sempat bersiap, jadi lompatannya mudah terbaca.
+
+## Di game
+
+Di game, antisipasi punya dua peran yang berbeda:
+
+- **Untuk musuh dan bos:** ancang-ancang sebelum menyerang (sering disebut *telegraph*) memberi pemain waktu membaca serangan dan menghindar. Makin besar serangannya, biasanya makin jelas ancang-ancangnya.
+- **Untuk aksi pemain:** antisipasi menambah jeda antara tombol ditekan dan aksi terjadi. Karena itu, untuk aksi yang butuh respons cepat seperti melompat, antisipasinya dibuat sangat pendek atau hanya visual, sementara aksinya tetap terjadi seketika.
+
+<Aside type="note" title="Ukurannya bisa dicek">
+Rekam layar saat bermain, lalu putar frame demi frame. Hitung berapa frame dari tombol ditekan sampai karakter benar-benar bergerak. Jeda input dan cara mengukurnya dibahas di [Game Feel](/belajar/desain-game/02-game-feel/).
+</Aside>
+
+## Pelajari lebih dalam
+
+Antisipasi sering dipasangkan dengan [Squash & Stretch](/kamus/animasi/squash-stretch/): karakter memipih saat jongkok bersiap, lalu memanjang saat melesat ke atas. Untuk animasi lewat kode, jongkok singkat itu bisa dibuat sebagai [Tween](/kamus/animasi/tween/) pendek dengan [Easing](/kamus/animasi/easing/) ease out sebelum tween lompatannya.
+
+## Terkait
+
+- [Squash & Stretch](/kamus/animasi/squash-stretch/)
+- [Easing](/kamus/animasi/easing/)
+- [Timeline & Keyframe](/kamus/animasi/timeline/)

@@ -1,0 +1,77 @@
+---
+title: "Unlit"
+description: "Material yang tidak terpengaruh cahaya: warnanya selalu sama dari arah lampu mana pun dan tidak menerima bayangan. Paling ringan digambar. Dipakai untuk UI, langit, gaya visual datar, atau cahaya yang sudah dilukis di tekstur."
+kind: term
+level: 1
+aka: "unshaded, unlit shader, MeshBasicMaterial, shading model unlit"
+status: draf
+lastReviewed: 2026-11-04
+sources:
+  - title: "BaseMaterial3D (shading_mode, SHADING_MODE_UNSHADED)"
+    url: "https://docs.godotengine.org/en/stable/classes/class_basematerial3d.html"
+    publisher: "Godot Engine Documentation"
+    accessed: 2026-11-04
+  - title: "MeshBasicMaterial"
+    url: "https://threejs.org/docs/pages/MeshBasicMaterial.html"
+    publisher: "three.js"
+    accessed: 2026-11-04
+  - title: "Unlit shader material Inspector window reference for URP"
+    url: "https://docs.unity.com/en-us/engine/6000.0/manual/materials-and-shaders/built-in/shaders-in-universalrp/reference/unlit-shader"
+    publisher: "Unity Documentation"
+    accessed: 2026-11-04
+sidebar:
+  order: 9.5
+---
+
+import Aside from '~/components/Aside.astro'
+import EngineTabs from '~/components/EngineTabs.astro'
+
+Material **unlit** tidak menghitung cahaya sama sekali. Warna yang tampil adalah warna dasar atau tekstur apa adanya, dari arah lampu mana pun. Lampu digeser pun hasilnya tidak berubah, dan permukaannya tidak menerima bayangan.
+
+Kebalikannya adalah material **lit**, misalnya [PBR](/kamus/geometri/pbr/), yang menghitung terang-gelap dari arah cahaya, [normal](/kamus/geometri/normal/), dan sifat permukaan.
+
+- **Kelebihan:** paling ringan digambar, karena tidak ada perhitungan cahaya. Warnanya juga persis seperti yang dipilih desainer.
+- **Kekurangan:** bentuk 3D sulit terbaca. Bola unlit tanpa tekstur terlihat seperti lingkaran datar.
+
+Kapan dipakai:
+
+- **UI dan teks** di dunia 3D, yang warnanya harus selalu jelas.
+- **Langit, latar jauh, atau papan tanda** yang tidak perlu bereaksi terhadap lampu di sekitarnya.
+- **Gaya visual datar** atau gaya yang cahayanya sudah **dilukis langsung di tekstur**.
+- **Perangkat lemah**, saat perhitungan cahaya terlalu berat.
+
+<Aside type="note" title="Unlit, toon, dan realistis">
+Tiga gaya ini sering dibandingkan. Unlit tidak menghitung cahaya. [Toon shading](/kamus/shader/toon-shading/) menghitung cahaya lalu memotongnya jadi pita warna tegas. [PBR](/kamus/geometri/pbr/) menghitung cahaya dengan meniru fisika nyata. Bedanya bisa dicoba di [Lab: Cahaya menentukan warna permukaan](/lab/#shading).
+</Aside>
+
+## Di engine
+
+<EngineTabs>
+<div slot="unity">
+
+Di URP, pilih shader **Universal Render Pipeline/Unlit** pada material. Untuk efek buatan sendiri yang tetap tidak memakai cahaya bawaan, pakai Shader Graph jenis **Unlit**.
+
+</div>
+<div slot="unreal">
+
+{/* Belum diverifikasi: dev.epicgames.com diblokir proxy saat penulisan */}
+Pada material, ubah **Shading Model** menjadi **Unlit**. Warnanya lalu diambil dari input **Emissive Color**.
+
+</div>
+<div slot="godot">
+
+Pada `StandardMaterial3D`, ubah **Shading Mode** (`shading_mode`) menjadi **Unshaded**. Dokumentasi Godot menyebut mode ini paling cepat digambar, tetapi mematikan semua interaksi dengan cahaya dan objeknya tidak menerima bayangan.
+
+</div>
+</EngineTabs>
+
+## Di Three.js
+
+`MeshBasicMaterial` adalah material unlit: dokumentasinya menyebut material ini tidak terpengaruh cahaya. Lab Krekit memakainya untuk mode "tanpa cahaya" di percobaan shading.
+
+## Terkait
+
+- [Material](/kamus/geometri/material/)
+- [PBR](/kamus/geometri/pbr/)
+- [Toon shading](/kamus/shader/toon-shading/)
+- [Emissive](/kamus/geometri/emissive/)
